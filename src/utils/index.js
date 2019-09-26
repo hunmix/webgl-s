@@ -1,9 +1,9 @@
 import { Matrix4, Vector3, Vector4 } from './cuon-matrix'
-import initShaders from './cuon-utils'
+import { createProgram } from './webglHelper'
 
 export {
   Matrix4,
   Vector3,
   Vector4,
-  initShaders
+  createProgram
 }
