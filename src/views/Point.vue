@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import { createProgram } from '@/utils'
+// import { createProgram } from '@/utils'
 export default {
   name: 'Point',
   data () {
@@ -28,8 +28,6 @@ export default {
         gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
       }
     `
-    // 创建着色器程序
-    const program = createProgram(gl, VSHADER_SOURCE, FSHADER_SOURCE)
 
     // 创建顶点着色器对象
     const vertexShader = gl.createShader(gl.VERTEX_SHADER)
