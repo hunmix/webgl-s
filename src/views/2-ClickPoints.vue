@@ -1,5 +1,5 @@
 <template>
-  <canvas ref="canvas" width="400" height="400" @click="clickCanvas" style="width: 400px; height: 400px"></canvas>
+  <canvas ref="canvas" width="400" height="400" @click="clickCanvas"></canvas>
 </template>
 
 <script>
