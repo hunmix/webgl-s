@@ -38,7 +38,6 @@ export function createProgram (gl, vShaderSource, fShaderSource) {
  * @param {String} source 着色器源码
  */
 function loadShader(gl, type, source) {
-  console.log(type)
   // 创建着色器对象
   const shader = gl.createShader(type)
   if (shader == null) {

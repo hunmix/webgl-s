@@ -46,7 +46,7 @@ export default {
     box-sizing: border-box;
     padding: 50px 20px 20px 20px;
     width: 100%;
-    height: 100%;
+    height: auto;
   }
   .link{
     display: inline-block;
