@@ -8,14 +8,14 @@
 │  main.js                     // 程序入口文件
 │  mixin.js                    // 公共混入方法(暂时没用到)
 │  router.js                   // 路由
-│  
+│
 ├─utils
-│      cuon-matrix.js          // 矩阵类, 向量类
-│      webglHelper.js          // webGL初始化辅助函数
-│      index.js                // 入口
-│      
+│      index.js                // 工具入口文件
+│      webglHelper.js          // webGL辅助函数
+│
 └─views
-        Point.vue              // 页面, 每个页面会在header生成一个跳转到对应页面的按钮
-        ...
+        1-Point.vue            // 页面, 每个页面会在header生成一个跳转到对应页面的按钮
+        2-ClickPoints.vue
+        ...   
         template.vue           // 页面模板, 方便复制用- -
 ```
