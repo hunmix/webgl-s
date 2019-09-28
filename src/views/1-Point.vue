@@ -48,7 +48,7 @@ export default {
     gl.attachShader(program, vertexShader)
     // 将片元着色器挂载在着色器程序上
     gl.attachShader(program, fragmentShader)
-    //链接着色器程序
+    // 链接着色器程序
     gl.linkProgram(program)
 
     // 使用创建好的着色器程序。
