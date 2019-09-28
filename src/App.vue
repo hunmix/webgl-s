@@ -4,7 +4,9 @@
       <router-link class="link" :class="{active: button.path === $route.path}" v-for="button of buttons" :key="button.path" :to="button.path">{{button.path}}</router-link>
     </header>
     <div class="content-wrapper">
-      <router-view></router-view>
+      <keep-alive>
+        <router-view></router-view>
+      </keep-alive>
     </div>
   </div>
 </template>
