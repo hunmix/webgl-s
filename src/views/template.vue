@@ -1,3 +1,4 @@
+/* eslint-disable */
 <template>
   <canvas ref="canvas" width="400" height="400"></canvas>
 </template>
