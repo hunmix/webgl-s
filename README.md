@@ -16,6 +16,7 @@
 └─views
         1-Point.vue            // 页面, 每个页面会在header生成一个跳转到对应页面的按钮
         2-ClickPoints.vue
+        3-3-MultiPotint.vue
         ...   
         template.vue           // 页面模板, 方便复制用- -
 ```

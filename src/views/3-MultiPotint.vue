@@ -27,7 +27,7 @@ export default {
         gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
       }
     `
-
+    // 顶点数组, 两个值表示一个二维点坐标
     const vertices = new Float32Array([
       0.0, 0.5, -0.5, -0.5, 0.5, -0.5
     ])
@@ -35,12 +35,26 @@ export default {
     const program = createProgram(gl, VSHADER_RESOURCE, FSHADER_RESOUCE)
     gl.useProgram(program)
 
+    // 创建缓冲区对象
     const buffer = gl.createBuffer()
+    // 将缓冲区对象绑定到目标
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
+    // 向缓冲对象中写入数据
     gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW)
 
+    // 获取a_Postion变量
     const a_Position = gl.getAttribLocation(program, 'a_Position')
-    gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, 0, 0)
+
+    const index = a_Position // 索引
+    const size = 2 // 占用元素数量
+    const type = gl.FLOAT // 元素类型
+    const normalized = false // 是否归一化
+    const stride = 0 // 一个顶点信息所占用的字节数
+    const offset = 0 // 字节偏移量, 单位为字节
+
+    // 将缓冲区对象分配给a_Positiohn变量 
+    gl.vertexAttribPointer(index, size, type, normalized, 0, 0)
+    // 连接a_Position变量与分配给它的缓冲区对象
     gl.enableVertexAttribArray(a_Position)
 
     gl.drawArrays(gl.POINTS, 0, 3)
