@@ -1,5 +1,8 @@
 <template>
-  <canvas ref="canvas" width="400" height="400" @click="clickCanvas"></canvas>
+  <div>
+    <canvas ref="canvas" width="400" height="400" @click="clickCanvas"></canvas>
+    <p>在画布上点击鼠标</p>
+  </div>
 </template>
 
 <script>

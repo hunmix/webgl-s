@@ -16,7 +16,13 @@
 └─views
         1-Point.vue            // 页面, 每个页面会在header生成一个跳转到对应页面的按钮
         2-ClickPoints.vue
-        3-3-MultiPotint.vue
+        3-MultiPotint.vue
+        4-Rect.vue
+        5-ColoredPoints.vue
+        6-Circle.vue
+        7-Ring.vue
         ...   
         template.vue           // 页面模板, 方便复制用- -
 ```
+
+[demo预览](http://www.wanglulu.store)
