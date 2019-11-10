@@ -52,8 +52,8 @@ export default {
     const stride = 0 // 一个顶点信息所占用的字节数
     const offset = 0 // 字节偏移量, 单位为字节
 
-    // 将缓冲区对象分配给a_Positiohn变量 
-    gl.vertexAttribPointer(index, size, type, normalized, 0, 0)
+    // 将缓冲区对象分配给a_Positiohn变量
+    gl.vertexAttribPointer(index, size, type, normalized, stride, offset)
     // 连接a_Position变量与分配给它的缓冲区对象
     gl.enableVertexAttribArray(a_Position)
 
