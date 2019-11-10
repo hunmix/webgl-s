@@ -7,12 +7,15 @@ const generateRoutes = requireContext => {
   return requireContext.keys().map(key => {
     const name = key.replace(/(.*\/)*([^.]+).*/ig, '$2')
     const component = requireContext(key)
+    if (name === 'template') {
+      return null
+    }
     return {
       path: `/${name}`,
       name,
       component: component.default
     }
-  })
+  }).filter(v => v)
 }
 
 export const routes = generateRoutes(requireContext)
