@@ -13,11 +13,11 @@ steps:
     password: ${PASSWORD}
     repo: toys/webgl-s
     registry: ccr.ccs.tencentyun.com
-    tags: latest
-  commands:
-    - pwd /
-    - cd /
-    - ls
+  #   tags: latest
+  # commands:
+  #   - pwd /
+  #   - cd /
+  #   - ls
   environment:
     USERNAME:
       from_secret: txUsername
