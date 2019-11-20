@@ -15,6 +15,7 @@ steps:
     registry: ccr.ccs.tencentyun.com
     tags: latest
   commands:
+    - pwd /
     - cd /
     - ls
   environment:
