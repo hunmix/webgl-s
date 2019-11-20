@@ -2,10 +2,10 @@ kind: pipeline
 workspace:
   -base: /drone-demo
 steps:
-- name: build
-  image: node:10
-  commands:
-    - ls
+# - name: build
+#   image: node:10
+#   commands:
+#     - ls
 - name: upload
   image: plugins/docker
   settings:
@@ -15,6 +15,7 @@ steps:
     registry: ccr.ccs.tencentyun.com
     tags: latest
   commands:
+    - cd /
     - ls
   environment:
     USERNAME:
