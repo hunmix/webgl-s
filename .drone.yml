@@ -1,0 +1,29 @@
+kind: pipeline
+
+steps:
+- name: upload
+  image: plugins/docker
+  settings:
+    username: ${USERNAME}
+    password: ${PASSWORD}
+    repo: toys/webgl-s
+    registry: ccr.ccs.tencentyun.com
+    tags: latest
+  environment:
+    USERNAME:
+      from_secret: txUsername
+    PASSWORD:
+      from_secret: txPassword
+    REPO:
+      from_secret: txRepo
+# - name: install
+#   image: node:10
+#   environment:
+#     TEST:
+#       from_secret: test
+#   commands:
+#   - npm install
+#   - npm run build
+# trigger:
+#   branch:
+#   - master
