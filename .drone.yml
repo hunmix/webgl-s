@@ -1,0 +1,15 @@
+kind: pipeline
+steps:
+- name: upload-docker-image
+  image: plugins/docker
+  settings:
+    username:
+      from_secret: txUsername
+    password:
+      from_secret: txPassword
+    repo: ccr.ccs.tencentyun.com/toys/webgl-s
+    registry: ccr.ccs.tencentyun.com
+    tags: ${DRONE_TAG=latest}
+# trigger:
+#   branch:
+#   - master
