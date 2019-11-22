@@ -22,7 +22,8 @@ steps:
     port: 22
     script:
       - sudo docker login --username=$USERNAME --password=$PASSWORD ccr.ccs.tencentyun.com
-      - sudo docker rm -f ccr.ccs.tencentyun.com/toys/webgl-s:${DRONE_TAG=latest}
+      - sudo docker stop webgl
+      - sudo docker rm webgl
       - sudo docker pull ccr.ccs.tencentyun.com/toys/webgl-s:${DRONE_TAG=latest}
       - sudo docker run -d --name webgl -p 3006:80 ccr.ccs.tencentyun.com/toys/webgl-s:${DRONE_TAG=latest}
   environment:
