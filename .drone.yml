@@ -4,12 +4,29 @@ steps:
   image: plugins/docker
   settings:
     username:
-      from_secret: txUsername
+      from_secret: docker_username
     password:
-      from_secret: txPassword
+      from_secret: docker_password
     repo: ccr.ccs.tencentyun.com/toys/webgl-s
     registry: ccr.ccs.tencentyun.com
     tags: ${DRONE_TAG=latest}
+- name: deploy
+  image: appleboy/drone-ssh
+  settings:
+    host: wanglulu.store
+    username:
+      from_secret: server_username
+    password:
+      from_secret: server_password
+    port: 22
+    script:
+      - sudo docker login --username=${USERNAME} --password=${PASSWORD} ccr.ccs.tencentyun.com
+      - echo hello world
+    environment:
+      USERNAME:
+        from_secret: docker_username
+      PASSWORD:
+        from_secret: docker_password
 # trigger:
 #   branch:
 #   - master
