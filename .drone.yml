@@ -23,8 +23,7 @@ steps:
     script:
       - sudo docker login --username=$USERNAME --password=$PASSWORD ccr.ccs.tencentyun.com
       - sudo docker pull ccr.ccs.tencentyun.com/toys/webgl-s:${DRONE_TAG=latest}
-      # - sudo docker build -t webgl ccr.ccs.tencentyun.com/toys/webgl-s:${DRONE_TAG=latest}
-      # - sudo docker run -d --name webgl -p 3006:80 webgl
+      - sudo docker run -d --name webgl -p 3006:80 webgl
   environment:
     USERNAME:
       from_secret: docker_username
