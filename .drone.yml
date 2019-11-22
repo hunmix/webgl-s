@@ -24,11 +24,11 @@ steps:
       # - sudo docker login --username=$USERNAME --password=$PASSWORD ccr.ccs.tencentyun.com
       - echo $USERNAME
       - echo ${USERNAME}
-    environment:
-      USERNAME:
-        from_secret: docker_username
-      PASSWORD:
-        from_secret: docker_password
+  environment:
+    USERNAME:
+      from_secret: docker_username
+    PASSWORD:
+      from_secret: docker_password
 # trigger:
 #   branch:
 #   - master
