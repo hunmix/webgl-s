@@ -22,6 +22,7 @@ steps:
     port: 22
     script:
       - sudo docker login --username=$USERNAME --password=$PASSWORD ccr.ccs.tencentyun.com
+      - sudo docker pull ccr.ccs.tencentyun.com/toys/webgl-s:${DRONE_TAG=latest}
   environment:
     USERNAME:
       from_secret: docker_username
