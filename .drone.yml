@@ -1,17 +1,17 @@
 kind: pipeline
 steps:
-# - name: upload-docker-image
-#   image: plugins/docker
-#   settings:
-#     username:
-#       from_secret: docker_username
-#     password:
-#       from_secret: docker_password
-#     repo:
-#       from_secret: tx_docker_repo
-#     registry:
-#       from_secret: tx_docker_registry
-#     tags: ${DRONE_TAG=latest}
+- name: upload-docker-image
+  image: plugins/docker
+  settings:
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+    repo:
+      from_secret: tx_docker_repo
+    registry:
+      from_secret: tx_docker_registry
+    tags: ${DRONE_TAG=latest}
 - name: deploy
   image: appleboy/drone-ssh
   settings:
