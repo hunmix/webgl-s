@@ -1,4 +1,5 @@
 # webgl-s
+[![Build Status](http://drone.wanglulu.store/api/badges/hunmix/webgl-s/status.svg?ref=refs/heads/master)](http://drone.wanglulu.store/hunmix/webgl-s)
 
 ### 目录结构
 
