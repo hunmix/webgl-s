@@ -8,6 +8,9 @@
 │  main.js                     // 程序入口文件
 │  mixin.js                    // 公共混入方法(暂时没用到)
 │  router.js                   // 路由
+│  Dockerfile
+│  .drone.yml                  // drone pipeline config
+│  nginx                       // nginx 配置
 │
 ├─utils
 │      index.js                // 工具入口文件
@@ -25,4 +28,4 @@
         template.vue           // 页面模板, 方便复制用- -
 ```
 
-[demo预览](http://www.wanglulu.store)
+[在线预览](http://webgl.wanglulu.store)
