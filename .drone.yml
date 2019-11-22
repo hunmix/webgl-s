@@ -1,15 +1,15 @@
 kind: pipeline
 steps:
-# - name: upload-docker-image
-#   image: plugins/docker
-#   settings:
-#     username:
-#       from_secret: docker_username
-#     password:
-#       from_secret: docker_password
-#     repo: ccr.ccs.tencentyun.com/toys/webgl-s
-#     registry: ccr.ccs.tencentyun.com
-#     tags: ${DRONE_TAG=latest}
+- name: upload-docker-image
+  image: plugins/docker
+  settings:
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+    repo: ccr.ccs.tencentyun.com/toys/webgl-s
+    registry: ccr.ccs.tencentyun.com
+    tags: ${DRONE_TAG=latest}
 - name: deploy
   image: appleboy/drone-ssh
   settings:
