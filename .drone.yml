@@ -21,8 +21,8 @@ steps:
     port: 22
     script:
       - sudo docker login --username=${USERNAME} --password=${PASSWORD} ccr.ccs.tencentyun.com
-      - cd /www
-      - ls
+      - echo ${USERNAME}
+      - echo ${PASSWORD}
     environment:
       USERNAME:
         from_secret: docker_username
