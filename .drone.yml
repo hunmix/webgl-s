@@ -1,17 +1,17 @@
 kind: pipeline
 steps:
-- name: upload-docker-image
-  image: plugins/docker
-  settings:
-    username:
-      from_secret: docker_username
-    password:
-      from_secret: docker_password
-    repo:
-      from_secret: tx_docker_repo
-    registry:
-      from_secret: tx_docker_registry
-    tags: ${DRONE_TAG=latest}
+# - name: upload-docker-image
+#   image: plugins/docker
+#   settings:
+#     username:
+#       from_secret: docker_username
+#     password:
+#       from_secret: docker_password
+#     repo:
+#       from_secret: tx_docker_repo
+#     registry:
+#       from_secret: tx_docker_registry
+#     tags: ${DRONE_TAG=latest}
 - name: deploy
   image: appleboy/drone-ssh
   settings:
@@ -20,22 +20,22 @@ steps:
       from_secret: server_username
     password:
       from_secret: server_password
-    envs: [USERNAME, PASSWORD, tx_docker_repo, tx_docker_registry]
+    envs: [USERNAME, PASSWORD, TX_DOCKER_REPO, TX_DOCKER_REGISTRY]
     port: 22
     script:
-      - sudo docker login --username=$USERNAME --password=$PASSWORD $tx_docker_registry
+      - sudo docker login --username=$USERNAME --password=$PASSWORD $TX_DOCKER_REGISTRY
       - sudo docker stop webgl
       - sudo docker rm webgl
-      - sudo docker pull $tx_docker_repo:${DRONE_TAG=latest}
-      - sudo docker run -d --name webgl -p 3006:80 $tx_docker_repo:${DRONE_TAG=latest}
+      - sudo docker pull $TX_DOCKER_REPO:${DRONE_TAG=latest}
+      - sudo docker run -d --name webgl -p 3006:80 $TX_DOCKER_REPO:${DRONE_TAG=latest}
   environment:
     USERNAME:
       from_secret: docker_username
     PASSWORD:
       from_secret: docker_password
-    tx_docker_repo:
+    TX_DOCKER_REPO:
       from_secret: tx_docker_repo
-    tx_docker_registry:
+    TX_DOCKER_REGISTRY:
       from_secret: tx_docker_registry
 # trigger:
 #   branch:
