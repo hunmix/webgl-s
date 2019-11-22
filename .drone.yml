@@ -7,8 +7,10 @@ steps:
       from_secret: docker_username
     password:
       from_secret: docker_password
-    repo: ccr.ccs.tencentyun.com/toys/webgl-s
-    registry: ccr.ccs.tencentyun.com
+    repo:
+      from_secret: tx_docker_repo
+    registry:
+      from_secret: tx_docker_registry
     tags: ${DRONE_TAG=latest}
 - name: deploy
   image: appleboy/drone-ssh
@@ -21,11 +23,11 @@ steps:
     envs: [USERNAME, PASSWORD]
     port: 22
     script:
-      - sudo docker login --username=$USERNAME --password=$PASSWORD ccr.ccs.tencentyun.com
+      - sudo docker login --username=$USERNAME --password=$PASSWORD $tx_docker_registry
       - sudo docker stop webgl
       - sudo docker rm webgl
-      - sudo docker pull ccr.ccs.tencentyun.com/toys/webgl-s:${DRONE_TAG=latest}
-      - sudo docker run -d --name webgl -p 3006:80 ccr.ccs.tencentyun.com/toys/webgl-s:${DRONE_TAG=latest}
+      - sudo docker pull $tx_docker_repo:${DRONE_TAG=latest}
+      - sudo docker run -d --name webgl -p 3006:80 $tx_docker_repo:${DRONE_TAG=latest}
   environment:
     USERNAME:
       from_secret: docker_username
