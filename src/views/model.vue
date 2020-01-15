@@ -1,8 +1,11 @@
 <template>
   <div class="container" ref="container">
-    <button @click="addCube">规则物体贴图</button>
-    <button @click="addCube2">不规则物体贴图</button>
-    <button @click="addCube3">牙齿模型</button>
+    <!-- <div class="canvas" ref="container"></div> -->
+    <div class="op">
+      <button @click="addCube">规则物体贴图</button>
+      <button @click="addCube2">不规则物体贴图</button>
+      <button @click="addCube3">牙齿模型</button>
+    </div>
   </div>
 </template>
 
@@ -56,6 +59,7 @@ export default {
 
     camera.position.z = 5
 
+    this.addStlSplit()
     // const loader = new STLLoader()
     // loader.load('/model/model1.stl', (geometry) => {
     //   geometry = new THREE.Geometry().fromBufferGeometry(geometry)
@@ -79,24 +83,31 @@ export default {
       while (this.scene.children.length > 0) {
         this.scene.remove(this.scene.children[0])
       }
-      const geometry = new THREE.BoxGeometry(8, 8, 8)
-      var texture = new THREE.TextureLoader().load('/model/texture.jpg')
-      const material = new THREE.MeshBasicMaterial({ map: texture, color: 0xffffff })
-      // const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 })
-      const cube = new THREE.Mesh(geometry, material)
-      cube.color = 0xffffff
-      this.scene.add(cube)
+      const loader = new STLLoader()
+      loader.load('/models/cube.stl', (geometry) => {
+        geometry = new THREE.Geometry().fromBufferGeometry(geometry)
+        // 创建纹理
+        // var mat = new THREE.MeshBasicMaterial({ color: 0x00ff00 })
+        var texture = new THREE.TextureLoader().load('/models/texture.jpg')
+        this.assignUVs(geometry)
+        // texture.repeat.set(0.001, 0.001)
+        var mat = new THREE.MeshBasicMaterial({ map: texture, color: 0xffffff })
+        var mesh = new THREE.Mesh(geometry, mat)
+        mesh.rotation.x = -0.5 * Math.PI // 将模型摆正
+        mesh.rotation.z = -0.5 * Math.PI // 将模型摆正
+        this.scene.add(mesh)
+      })
     },
     addCube2 () {
       while (this.scene.children.length > 0) {
         this.scene.remove(this.scene.children[0])
       }
       const loader = new STLLoader()
-      loader.load('/model/left.stl', (geometry) => {
+      loader.load('/models/left.stl', (geometry) => {
         geometry = new THREE.Geometry().fromBufferGeometry(geometry)
         // 创建纹理
         // var mat = new THREE.MeshBasicMaterial({ color: 0x00ff00 })
-        var texture = new THREE.TextureLoader().load('/model/texture2.jpg')
+        var texture = new THREE.TextureLoader().load('/models/texture2.jpg')
         this.assignUVs(geometry)
         // texture.repeat.set(0.001, 0.001)
         var mat = new THREE.MeshBasicMaterial({ map: texture, color: 0xffffff })
@@ -105,11 +116,11 @@ export default {
         mesh.rotation.z = -0.5 * Math.PI // 将模型摆正
         this.scene.add(mesh)
       })
-      loader.load('/model/right.stl', (geometry) => {
+      loader.load('/models/right.stl', (geometry) => {
         geometry = new THREE.Geometry().fromBufferGeometry(geometry)
         // 创建纹理
         // var mat = new THREE.MeshBasicMaterial({ color: 0x00ff00 })
-        var texture = new THREE.TextureLoader().load('/model/texture3.jpg')
+        var texture = new THREE.TextureLoader().load('/models/texture3.jpg')
         this.assignUVs(geometry)
         // texture.repeat.set(0.001, 0.001)
         var mat = new THREE.MeshBasicMaterial({ map: texture, color: 0xffffff })
@@ -118,9 +129,9 @@ export default {
         mesh.rotation.z = -0.5 * Math.PI // 将模型摆正
         this.scene.add(mesh)
       })
-      loader.load('/model/right2.stl', (geometry) => {
+      loader.load('/models/right2.stl', (geometry) => {
         geometry = new THREE.Geometry().fromBufferGeometry(geometry)
-        var texture = new THREE.TextureLoader().load('/model/texture.jpg')
+        var texture = new THREE.TextureLoader().load('/models/texture.jpg')
         this.assignUVs(geometry)
         var mat = new THREE.MeshBasicMaterial({ map: texture, color: 0xffffff })
         var mesh = new THREE.Mesh(geometry, mat)
@@ -134,7 +145,7 @@ export default {
         this.scene.remove(this.scene.children[0])
       }
       const loader = new STLLoader()
-      loader.load('/model/model1.stl', (geometry) => {
+      loader.load('/models/model1.stl', (geometry) => {
         // geometry = new THREE.Geometry().fromBufferGeometry(geometry)
         console.log('done')
         // 创建纹理
@@ -149,6 +160,26 @@ export default {
         // geometry = new THREE.Geometry().fromBufferGeometry(geometry)
         // 创建纹理
         var mat = new THREE.MeshBasicMaterial({ color: 0x00ff00 })
+        var mesh = new THREE.Mesh(geometry, mat)
+        mesh.rotation.x = -0.5 * Math.PI // 将模型摆正
+        mesh.rotation.z = -0.5 * Math.PI // 将模型摆正
+        this.scene.add(mesh)
+      })
+    },
+    addStlSplit () {
+      while (this.scene.children.length > 0) {
+        this.scene.remove(this.scene.children[0])
+      }
+      const loader = new STLLoader()
+      loader.load('/models/split.stl', (geometry) => {
+        console.log(geometry)
+        geometry = new THREE.Geometry().fromBufferGeometry(geometry)
+        // 创建纹理
+        // var mat = new THREE.MeshBasicMaterial({ color: 0x00ff00 })
+        var texture = new THREE.TextureLoader().load('/models/texture2.jpg')
+        this.assignUVs(geometry)
+        // texture.repeat.set(0.001, 0.001)
+        var mat = new THREE.MeshBasicMaterial({ map: texture, color: 0xffffff })
         var mesh = new THREE.Mesh(geometry, mat)
         mesh.rotation.x = -0.5 * Math.PI // 将模型摆正
         mesh.rotation.z = -0.5 * Math.PI // 将模型摆正
@@ -182,8 +213,16 @@ export default {
 
 <style lang="scss" scoped>
 .container{
-  width: 700px;
-  height: 700px;
+  position: relative;
+  width: 600px;
+  height: 600px;
   background: #ccc;
+  .canvas{
+    width: 100%;
+    height: 100%;
+  }
+  .op{
+    position: absolute;
+  }
 }
 </style>
