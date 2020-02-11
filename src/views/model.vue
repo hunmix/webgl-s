@@ -1,8 +1,20 @@
 <template>
-  <div class="container" ref="container">
-    <!-- <div class="canvas" ref="container"></div> -->
+  <div>
+    <div class="container" ref="container">
+      <!-- <div class="canvas" ref="container"></div> -->
+    </div>
     <div class="op">
-      <!-- <button @click="pause">{{isPause ? '开始' : '暂停' }}</button> -->
+      <button @click="play">{{isPause ? 'start' : 'pause' }}</button>
+    </div>
+    <div class="progress">
+      <div
+        :class="{step: true, step__active: activeStep === i - 1}"
+        v-for="i of STEPS + 1"
+        :key="i"
+        @click="changeProgress(i - 1)"
+      >
+        {{i - 1}}
+      </div>
     </div>
   </div>
 </template>
@@ -25,11 +37,12 @@ export default {
       rayCaster: null,
       mouse: null,
       animationObjects: [],
-      isPause: false,
-      lastTime: null,
-      STEP: 0.3,
+      isPause: true,
+      STEPS: 12, // 总步数
+      STEP_LEN: 0.5, // 步长
       GUI: null,
-      unselectableItems: []
+      unselectableItems: [],
+      activeStep: 0 // 当前播放帧
     }
   },
   computed: {},
@@ -46,8 +59,6 @@ export default {
 
     const camera = new THREE.PerspectiveCamera(75, this.$refs.container.offsetWidth / this.$refs.container.offsetHeight, 0.1, 1000)
     this.camera = camera
-    const helper = new THREE.CameraHelper(camera)
-    scene.add(helper)
 
     const renderer = new THREE.WebGLRenderer({ antialias: true })
     renderer.setSize(this.$refs.container.offsetWidth, this.$refs.container.offsetHeight)
@@ -64,12 +75,32 @@ export default {
     scene.background = new THREE.Color(0x5e5e5e)
     const ambientLight = new THREE.AmbientLight(0xa2a2a2)
     scene.add(ambientLight)
+
     const directionalLight = new THREE.DirectionalLight(0xf0e8e8, 0.3)
     directionalLight.castShadow = true
     directionalLight.position.set(0, 20, 50)
     scene.add(directionalLight)
+    const directionalLight2 = new THREE.DirectionalLight(0xf0e8e8, 0.3)
+    directionalLight2.castShadow = true
+    directionalLight2.position.set(-50, 20, 0)
+    // scene.add(directionalLight2)
+    const directionalLight3 = new THREE.DirectionalLight(0xf0e8e8, 0.3)
+    directionalLight3.castShadow = true
+    directionalLight3.position.set(50, 20, 0)
+    // scene.add(directionalLight3)
     const dirHelper = new THREE.DirectionalLightHelper(directionalLight, 5)
     scene.add(dirHelper)
+    // const dirHelper2 = new THREE.DirectionalLightHelper(directionalLight2, 5)
+    // scene.add(dirHelper2)
+    // const dirHelper3 = new THREE.DirectionalLightHelper(directionalLight3, 5)
+    // scene.add(dirHelper3)
+
+    // controls.addEventListener('change', () => {
+    //   // console.log('changed')
+    //   // console.log(camera.position)
+    //   directionalLight.position.copy(camera.position)
+    // })
+    // camera.add(directionalLight)
     // var pointLight = new THREE.PointLight(0xff0000, 1, 50)
     // pointLight.position.set(0, 40, 40)
     // pointLight.castShadow = true
@@ -105,18 +136,19 @@ export default {
         mesh.material.flatShading = this.GUI.gumFlatShading
       })
       renderer.render(scene, camera)
-      if (!this.isPause) {
-        this.animationObjects.forEach(mesh => {
-          mesh.material.color.set(this.GUI.toothColor)
-          mesh.material.emissive.set(this.GUI.toothEmissive)
-          mesh.material.specular.set(this.GUI.toothSpecular)
-          mesh.material.shininess = this.GUI.toothShininess
-          mesh.material.flatShading = this.GUI.toothFlatShading
-          if (mesh.userData.clock && mesh.userData.mixer) {
-            mesh.userData.mixer.update(mesh.userData.clock.getDelta())
-          }
-        })
-      }
+      // if (!this.isPause) {
+      this.animationObjects.forEach(mesh => {
+        mesh.material.color.set(this.GUI.toothColor)
+        mesh.material.emissive.set(this.GUI.toothEmissive)
+        mesh.material.specular.set(this.GUI.toothSpecular)
+        mesh.material.shininess = this.GUI.toothShininess
+        mesh.material.flatShading = this.GUI.toothFlatShading
+        this.activeStep = Math.floor(mesh.userData.action.time / this.STEP_LEN)
+        if (mesh.userData.clock && mesh.userData.mixer) {
+          mesh.userData.mixer.update(mesh.userData.clock.getDelta())
+        }
+      })
+      // }
     }
 
     camera.position.z = 5
@@ -166,9 +198,10 @@ export default {
         gumFlatShading: false
       }
       const scene = gui.addFolder('scene and light')
-      scene.add(this.GUI, 'dirLightX', -100, 100)
-      scene.add(this.GUI, 'dirLightY', -100, 100)
-      scene.add(this.GUI, 'dirLightZ', -100, 100)
+      scene.add(this.GUI, 'dirLightX', -200, 200)
+      scene.add(this.GUI, 'dirLightY', -200, 200)
+      scene.add(this.GUI, 'dirLightZ', -200, 200)
+      scene.add(this.GUI, 'dirLightStrength', 0, 3)
       scene.addColor(this.GUI, 'dirLightColor')
       scene.addColor(this.GUI, 'ambientLightColor')
       const tooth = gui.addFolder('toothMaterial')
@@ -184,15 +217,39 @@ export default {
       gum.add(this.GUI, 'gumShininess', 0, 100)
       gum.add(this.GUI, 'gumFlatShading')
     },
-    pause () {
+    changeProgress (index) {
+      if (this.isPause) {
+        this.animationObjects.forEach(mesh => {
+          mesh.userData.action.time = index * this.STEP_LEN
+          mesh.userData.clip.duration = index * this.STEP_LEN
+          this.activeStep = index
+          mesh.userData.action.play()
+        })
+      } else {
+        this.animationObjects.forEach(mesh => {
+          mesh.userData.action.time = index * this.STEP_LEN
+          mesh.userData.clip.duration = this.STEPS * this.STEP_LEN
+          this.activeStep = index
+          mesh.userData.action.play()
+        })
+      }
+    },
+    play () {
+      if (this.activeStep === this.STEPS && this.isPause) {
+        this.animationObjects.forEach(mesh => {
+          // mesh.userData.action.time = 0
+          mesh.userData.clip.duration = this.STEPS * this.STEP_LEN
+          mesh.userData.action.reset()
+          this.isPause = false
+        })
+        return
+      }
       this.animationObjects.forEach(mesh => {
         if (mesh.userData.clock && mesh.userData.mixer) {
           if (!this.isPause) {
-            console.log(mesh.userData)
-            this.lastTime = mesh.userData.action.time
             mesh.userData.action.paused = true
           } else {
-            mesh.userData.action.time = this.lastTime
+            mesh.userData.clip.duration = this.STEPS * this.STEP_LEN
             mesh.userData.action.paused = false
           }
         }
@@ -202,16 +259,19 @@ export default {
     async addCube3 () {
       const loader = new STLLoader()
       loader.load('/model/gum.stl', geometry => {
-        geometry.computeVertexNormals()
         // const material = new THREE.MeshLambertMaterial({ color: 0xE7909A, shininess: 100, emissive: 0xafa1a1 })
+        // geometry = new THREE.Geometry().fromBufferGeometry(geometry)
+        // geometry.mergeVertices()
+        geometry.computeVertexNormals()
         const material = new THREE.MeshPhongMaterial({
           color: 0x892b32,
           shininess: 30,
           emissive: 0x000000,
-          specular: 0x3e2020
+          specular: 0x3e2020,
+          shading: THREE.SmoothShading
         })
-        material.flatShading = THREE.SmoothShading
         const mesh = new THREE.Mesh(geometry, material)
+        // mesh.material.flatShading = false
         mesh.castShadow = mesh.receiveShadow = true
         this.scene.add(mesh)
         this.unselectableItems.push(mesh)
@@ -245,8 +305,11 @@ export default {
           geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3))
           geometry.morphAttributes.position = []
           geometry.morphAttributes.position[0] = new THREE.BufferAttribute(new Float32Array(islands2[i].positions), 3)
-          // 这里也可以初始化的时候扔进去
+          // geometry = new THREE.Geometry().fromBufferGeometry(geometry)
+          // geometry.mergeVertices()
           geometry.computeVertexNormals()
+          // 这里也可以初始化的时候扔进去
+          // geometry.computeVertexNormals()
           // geometry.morphTargets = []
           // geometry.morphTargets.push(0)
           // geometry.morphTargetInfluences = [0]
@@ -261,8 +324,6 @@ export default {
             // emissive: 0x5e5959,
             morphTargets: true,
             shininess: 50,
-            roughness: 0.3,
-            metalness: 1,
             specular: 0x919191,
             flatShading: false
           })
@@ -274,21 +335,28 @@ export default {
           this.scene.add(mesh)
           // mesh.morphTargetInfluences = [0]
           const mixer = new THREE.AnimationMixer(mesh)
-          // const track = new THREE.VectorKeyframeTrack(
-          //   '.position', [0, 1], [
-          //     0, 0, 0,
-          //     10, 10, 0
-          //   ]
-          // )
-          // const colorKF = new THREE.ColorKeyframeTrack('.material.color', [ 0, 1, 2 ], [ 1, 0, 0, 0, 1, 0, 0, 0, 1 ], THREE.InterpolateDiscrete)
-          // const animationClip = new THREE.AnimationClip('Action', 5, [colorKF, track])
-          const keyFrame = new THREE.NumberKeyframeTrack('geometry.morphTargetInfluences', [0, 3], [0, 1], THREE.InterpolateSmooth)
-          const animationClip = new THREE.AnimationClip('wavelineMorphTargetsClip', 3, [keyFrame]).optimize()
+          const times = []
+          const values = []
+          // 计算每个阶段的morphTargetInfluences值, 均分
+          const step = Math.floor(10000 / (this.STEPS)) / 10000
+          // 共STEPS + 1个阶段, 第一个为初始阶段(牙齿初始模型)
+          for (let i = 0; i <= this.STEPS; i++) {
+            times.push(i * this.STEP_LEN)
+            values.push(i * step)
+          }
+          const keyFrame = new THREE.NumberKeyframeTrack('geometry.morphTargetInfluences', times, values, THREE.InterpolateDiscrete)
+          const animationClip = new THREE.AnimationClip('wavelineMorphTargetsClip', this.STEPS * this.STEP_LEN, [keyFrame]).optimize()
+          // 不自动开启动画
+          this.isPause = true
+          animationClip.duration = 0
           // const animationClip = new THREE.AnimationClip.CreateFromMorphTargetSequence('run', mesh.geometry.morphTargets, 30)
           // console.log(animationClip)
           const animationAction = mixer.clipAction(animationClip)
-          // animationAction.setLoop(THREE.LoopOnce)
-          animationAction.setLoop(THREE.LoopRepeat)
+          animationAction.setLoop(THREE.LoopOnce)
+          mixer.addEventListener('finished', e => {
+            this.isPause = true
+          })
+          // animationAction.setLoop(THREE.LoopRepeat)
           animationAction.clampWhenFinished = true
           animationAction.play()
           mesh.userData.clock = new THREE.Clock()
@@ -400,7 +468,22 @@ export default {
     height: 100%;
   }
   .op{
-    position: absolute;
+    margin: 4px 0;
+  }
+  .progress{
+    display: flex;
+    margin: 4px 0;
+    .step{
+      width: 50px;
+      height: auto;
+      margin: 0 1px;
+      background: #eee;
+      text-align: center;
+      cursor: pointer;
+    }
+    .step__active{
+      background: #ccc;
+    }
   }
 }
 </style>
